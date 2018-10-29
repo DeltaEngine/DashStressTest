@@ -22,6 +22,7 @@ time, mark, audio, video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  font-family: 'Montserrat', sans-serif;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
@@ -57,7 +58,7 @@ html, body {
 }
 * { margin: 0; padding: 0px; }
 
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700);body,html{height:100%;width:100%;margin:0;padding:0;left:0;top:0;font-size:100%}.center,.container{margin-left:auto;margin-right:auto}*{font-family:Lato,'Lato', Helvetica, sans-serif;line-height:1.5}h1{font-size:2.5rem}h2{font-size:2rem}h3{font-size:1.375rem}h4{font-size:1.125rem}h5{font-size:1rem}h6{font-size:.575rem}p{font-size:1.125rem;font-weight:200;line-height:1.8}.font-light{font-weight:300}.font-regular{font-weight:400}.font-heavy{font-weight:700}.left{text-align:left}.right{text-align:right}.center{text-align:center}.justify{text-align:justify}.container{width:90%}.row{position:relative;width:100%}.row [class^=col]{float:left;margin:.5rem 2%;min-height:.125rem}.col-1,.col-10,.col-11,.col-12,.col-2,.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9{width:96%}.col-1-sm{width:4.33%}.col-2-sm{width:12.66%}.col-3-sm{width:21%}.col-4-sm{width:29.33%}.col-5-sm{width:37.66%}.col-6-sm{width:46%}.col-7-sm{width:54.33%}.col-8-sm{width:62.66%}.col-9-sm{width:71%}.col-10-sm{width:79.33%}.col-11-sm{width:87.66%}.col-12-sm{width:96%}.row::after{content:"";display:table;clear:both}.hidden-sm{display:none}@media only screen and (min-width:33.75em){.container{width:80%}}@media only screen and (min-width:45em){.col-1{width:4.33%}.col-2{width:12.66%}.col-3{width:21%}.col-4{width:29.33%}.col-5{width:37.66%}.col-6{width:46%}.col-7{width:54.33%}.col-8{width:62.66%}.col-9{width:71%}.col-10{width:79.33%}.col-11{width:87.66%}.col-12{width:96%}.hidden-sm{display:block}}@media only screen and (min-width:60em){.container{width:75%;max-width:60rem}}
+body,html{height:100%;width:100%;margin:0;padding:0;left:0;top:0;font-size:100%}.center,.container{margin-left:auto;margin-right:auto}*{font-family: 'Montserrat', sans-serif;line-height:1.5}h1{font-size:2.5rem}h2{font-size:2rem}h3{font-size:1.375rem}h4{font-size:1.125rem}h5{font-size:1rem}h6{font-size:.575rem}p{font-size:1.125rem;font-weight:200;line-height:1.8}.font-light{font-weight:300}.font-regular{font-weight:400}.font-heavy{font-weight:700}.left{text-align:left}.right{text-align:right}.center{text-align:center}.justify{text-align:justify}.container{width:90%}.row{position:relative;width:100%}.row [class^=col]{float:left;margin:.5rem 2%;min-height:.125rem}.col-1,.col-10,.col-11,.col-12,.col-2,.col-3,.col-4,.col-5,.col-6,.col-7,.col-8,.col-9{width:96%}.col-1-sm{width:4.33%}.col-2-sm{width:12.66%}.col-3-sm{width:21%}.col-4-sm{width:29.33%}.col-5-sm{width:37.66%}.col-6-sm{width:46%}.col-7-sm{width:54.33%}.col-8-sm{width:62.66%}.col-9-sm{width:71%}.col-10-sm{width:79.33%}.col-11-sm{width:87.66%}.col-12-sm{width:96%}.row::after{content:"";display:table;clear:both}.hidden-sm{display:none}@media only screen and (min-width:33.75em){.container{width:80%}}@media only screen and (min-width:45em){.col-1{width:4.33%}.col-2{width:12.66%}.col-3{width:21%}.col-4{width:29.33%}.col-5{width:37.66%}.col-6{width:46%}.col-7{width:54.33%}.col-8{width:62.66%}.col-9{width:71%}.col-10{width:79.33%}.col-11{width:87.66%}.col-12{width:96%}.hidden-sm{display:block}}@media only screen and (min-width:60em){.container{width:75%;max-width:60rem}}
 
 .row [class^=col] img {
   max-width:100%;
@@ -65,11 +66,11 @@ html, body {
 }
 
 body {
-  background: #9A857A;
+  background: #149347;
 }
 
 h1,h2,h3,h4,h5,h6 {
-  font-family:'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 #renderCanvas {
@@ -82,20 +83,11 @@ h1,h2,h3,h4,h5,h6 {
   position: absolute;
 }*/
 
-.title {
-  position: absolute;
-  z-index:4;
-}
-
-
 span {
   display: block;
 }
 
 .global-mute {
-  position:absolute;
-  right:-30px;
-  top:0px;
   font-size:1.5em;
 }
 .global-mute a {
@@ -144,28 +136,54 @@ span {
 
 /*#logo {display:none;}*/
 .mobile-only {display:none !important;}
-.title {
-  top: 3px;
-  left: 5px;
-  width: 300px;
-  padding-left:5px;
+.titleDash {
+  position: absolute;
+  z-index:4;
+  top:67%;
+  width:100%;
 }
-.title img {
-  max-width: 100%;
+
+.titleBtc {
+  position: absolute;
+  z-index:4;
+  top:70.5%;
+  width:100%;
 }
-.title h2 {
-  font-size: 15px;
+
+.titleDash h2, .titleBtc h4 {
+  font-size: 18px;
   color: #fff;
   margin-top: -2px;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   text-align: center;
-  text-transform: uppercase;
   line-height:1.45;
   margin-bottom:0;
   padding-bottom:0;
   font-weight:700;
   letter-spacing:1px;
   text-shadow:0 1px 3px #000;
+}
+.title2 {
+  position: absolute;
+  z-index:4;
+  top: 3px;
+  left: 5px;
+  width: 75%;
+  padding-top:20px;
+  font-size:10px;
+  text-align:center;
+}
+.title2 h3 {
+  font-size: 24px;
+  color: #fff;
+  margin-top: -2px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  line-height:1.45;
+  margin-bottom:0;
+  padding-bottom:0;
+  text-shadow:0 1px 3px #000;
+  letter-spacing:1px;
 }
 .live {
   color:#FF0000;
@@ -195,7 +213,7 @@ span {
 }
 
 .nav a:hover i, .nav a:focus i {
-  color:#149347;
+  color:#008de4;
 }
 .nav i {
   color:#fff;
@@ -330,7 +348,7 @@ color:#444;
 
 .modal-content .modal-header {
     padding: 2px 16px;
-    background-color: #F0952D;
+    background-color: #008de4;
     color: white;
 }
 .modal-content .modal-header p {
@@ -341,7 +359,7 @@ color:#444;
 .modal-body {padding: 2px 16px;}
 .modal-footer {
     padding: 2px 16px;
-    background-color: #F0952D;
+    background-color: #008de4;
     color: white;
 }
 
@@ -410,7 +428,7 @@ margin:15px 0;display:block;
 
 #modal-info span {
   display:inline-block;
-  color:#149347;
+  color:#008de4;
   font-weight:700;
 }
 
@@ -469,7 +487,7 @@ margin:15px 0;display:block;
   font-size: 16px;
   text-transform: uppercase;
   z-index: -1;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 .lane-size.one {
   top: 15%;
@@ -511,7 +529,6 @@ margin:15px 0;display:block;
   width: 100%;
   height: 5%;
   background-repeat: no-repeat space;
-
 }
 .block.one {
   left: 55px;
@@ -539,36 +556,6 @@ margin:15px 0;display:block;
   background-position-x: right;
 }
 
-.no2x {
-  position: fixed;
-  z-index: 2;
-  background: url('assets/bg/no2x.png') no-repeat;
-  background-size: contain;
-  width: 100%;
-  height: 6.67%;
-  top: 80.01%;
-}
-
-.no2x.one {
-  left: 105px;
-}
-
-.no2x.two {
-  right:125px;
-  background-position-x: right;
-}
-
-
-.no2x.three {
-  left: 215px;
-}
-
-.no2x.four {
-  right:225px;
-  background-position-x: right;
-}
-
-
 .rotate {
   /* Safari */
   -webkit-transform: rotate(90deg);
@@ -595,7 +582,7 @@ margin:15px 0;display:block;
   border:1px solid #444;
   padding:15px 5px;
   text-align:center;
-  font-family:'Lato', helvetica, arial, sans-serif;
+  font-family:'Montserrat', helvetica, arial, sans-serif;
   color:#fff;
   font-weight:bold;
   letter-spacing:1px;
@@ -715,7 +702,7 @@ background:#2e2e2e;
     border-width:3px 2px 3px 0;
     border-radius: 0 10px 10px 0;
     }
-    .fees-toll:before {height:50px; top:55%; width:50px;}
+    .fees-toll:before {height:50px; top:55%; width:40px;}
     .fees-toll:after {content:none;}
     .fees-toll .avg {
       background:#275835;
@@ -748,7 +735,7 @@ background:#2e2e2e;
       top:43%;
     }
     .fees-toll.fees-btc .avg {
-      top:41.5%;
+      top:44.5%;
     }
 
     .fee-title.secondary {display:none;}
@@ -782,7 +769,8 @@ background:#2e2e2e;
     .fees-btc #fees-btc {
       background:#F8D448;
       color:#444;
-      left: -26px;
+      left: -22px;
+	  top:-5px;
       width: 58px;
       border: 1px solid #fff;
       border-width: 0 1px 1px 1px;
@@ -792,16 +780,6 @@ background:#2e2e2e;
 
     /*end new signage*/
 
-.ln {
-  position:absolute;
-  bottom:0px;
-  left:0;
-  width:100%;
-  height:13%;
-  width:73%;
-  background:url('assets/bg/ln.png') no-repeat;
-  background-size: contain;
-}
 .core-mode {
   display:none;
   position:absolute;
@@ -884,7 +862,7 @@ span.divider {
   position: absolute;
   top: 66.67%;
   left: 0;
-  z-index: 8;
+  z-index: -1;
 }
 
 .road-bg {
@@ -908,7 +886,7 @@ span.divider {
 }
 
 .bitcoin-cash {
-  background: url('assets/bg/nano.png') no-repeat center 33%;
+  background: url('assets/dash.png') no-repeat center 33%;
   background-size: 22.5%;
   height: 53.36%;
   width: 100%;
@@ -923,8 +901,8 @@ span.divider {
   content: "";
   width: 100%;
   height: 13.34%;
-  background: #/*149347*/;
-  background: #149347 url('assets/bg/divider.png') repeat-x;
+  background: #/*008de4*/;
+  background: #008de4 url('assets/bg/divider.png') repeat-x;
   background-size: 100% 40%;
   background-position:100% 127%;
   position: fixed;
@@ -981,8 +959,7 @@ span.divider {
 
 
 .bs {
-  /*background: #9EA0A3 url(assets/bg/bs.png) no-repeat center 0;*/
-    background: url(assets/bg/core.png) no-repeat center top;
+  background: url(assets/bg/core.png) no-repeat center top;
   background-size: auto 50%;
   height: 13.34%;
   width: 100%;
@@ -1023,7 +1000,7 @@ span.divider {
 .road-sign .highway-num {
   color: #F9D536;
   text-transform: uppercase;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.9em;
   font-weight: bold;
   position: absolute;
@@ -1034,13 +1011,13 @@ span.divider {
 .road-sign .sign-title {
   color: #245A35;
   text-transform: uppercase;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.7em;
   background: #fff;
   border-radius: 3px;
   line-height: 1;
   padding: 2px;
-  width: 75%;
+  width: 69%;
   position: absolute;
   right: 10px;
   top: 7px;
@@ -1050,36 +1027,10 @@ span.divider {
   font-weight:600;
 }
 
-/*.road-sign .sign-title .censored {
-      position: absolute;
-    top: 4px;
-    left: 47px;
-    z-index: 100;
-    background: url(assets/bg/c1.png) no-repeat center center;
-    width: 100px;
-    height: 9px;
-    background-size: 100%;
-}*/
-
-.road-sign .sign-title .censored {
-     position: absolute;
-    top: 0px;
-    left: 41px;
-    z-index: 100;
-    background: #231F20 url(assets/bg/c2.png) no-repeat center center;
-    width: 109px;
-    height: 11px;
-    background-size: 100%;
-    transform: rotate(3deg);
-    box-shadow:1px 1px 1px rgba(0, 0, 0, 0.4);
-    margin:0; padding:0;
-
-}
-
 .road-sign .cash-pool, .road-sign .core-pool {
   color: #fff;
   text-transform: uppercase;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.7em;
   margin: 5px 0 0 5px;
   font-weight: bold;
@@ -1122,7 +1073,6 @@ span.divider {
   right:-5px;
   bottom:-6px;
   transform: rotate(7deg);
-
 }
 
 .waiting-sign {
@@ -1130,7 +1080,7 @@ span.divider {
   border-radius: 10px;
   position: fixed;
   left: 8px;
-  bottom: 11.5%;
+  bottom: 7.5%;
   z-index: 99;
   width: 70px;
   /*box-shadow: 2px 3px 15px rgba(0, 0, 0, 0.3);*/
@@ -1167,7 +1117,7 @@ span.divider {
   padding:3px 2px 1px;
   font-size:9px;
   font-weight:700;
-  font-family:'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   margin:0;
 }
 
@@ -1274,13 +1224,13 @@ height:auto;
 }
 
 .btn {
-  background-color: #F0952D;
+  background-color: #008de4;
   padding: 10px 3em;
   border-radius: 3px;
   text-decoration: none;
   color: #fff;
   font-weight: bold;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   bottom: 39%;
   left: 10px;
   z-index: 99;
@@ -1327,7 +1277,7 @@ height:auto;
   width: 70px;
   text-decoration: none;
   text-transform: uppercase;
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   letter-spacing: 1px;
 }
 .modal-close:hover {
@@ -1366,7 +1316,7 @@ height:auto;
   z-index: 100;
   display: none;
   font-weight:bold;
-  font-family:'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 #confirmed-notify img {
@@ -1392,7 +1342,7 @@ height:auto;
   padding:1rem;
   color:#222;
   font-weight:bold;
-  font-family:'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .confirmed-text p {
@@ -1401,26 +1351,6 @@ height:auto;
 
 .text-center {
   text-align:center;
-}
-
-#page {
-    display: none;
-
-}
-#loading {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    height:100%;
-    width:100%;
-    width: 100vw;
-    height: 100vh;
-    background-color: #f8f8f8;
-    background-image: url("assets/blockchain.gif");
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
 /* The switch - the box around the switcher */
@@ -1452,7 +1382,7 @@ height:auto;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #149347;
+  background-color: #008de4;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -1683,7 +1613,7 @@ input[type=range]:focus::-ms-fill-upper {
 #modal-settings #slidecontainer label {
   color:#222;
   margin:0 0 -5px 0;
-  font-family:'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   letter-spacing:1px;
 }
 
@@ -1734,7 +1664,7 @@ input[type=range]:focus::-ms-fill-upper {
   font-size:0.65em;
   text-align:center;
   text-transform:uppercase;
-  font-family:'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   width:100%;
   letter-spacing: 1px;
 
@@ -1781,13 +1711,13 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .txinfo-cash{
-  background: #fff url('assets/nano.png') no-repeat 5px center;
+  background: #fff url('assets/dash.png') no-repeat 5px center;
   white-space: pre;
-  border-bottom: solid 2px #F0952D;
+  border-bottom: solid 2px #008de4;
   background-size:24px;
   text-align:right;
   padding-right:3px;
-  font-family:'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size:12px;
   padding:5px;
 }
@@ -1799,14 +1729,13 @@ input[type=range]:focus::-ms-fill-upper {
   background-size:24px;
   text-align:right;
   padding-right:3px;
-  font-family:'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size:12px;
   padding:5px;
 }
 .txinfo-core:before {
 
 }
-
 
 @media only screen and (max-width:812px) {
   #modal-info .modal-body p, #modal-info .modal-body ul {
@@ -1892,7 +1821,7 @@ input[type=range]:focus::-ms-fill-upper {
     position:fixed;
     top:5px;
     right:5px;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     text-transform:uppercase;
   }
 
@@ -1965,16 +1894,9 @@ input[type=range]:focus::-ms-fill-upper {
   }
 
 @media screen and (max-width: 600px){
-  .global-mute {
-    right:auto;
-    left:5px;
-    top:30px;
-  }
   .fees-bch,.fees-btc {
     right:10.2%;
   }
-
-
 
 
 @media only screen and (orientation: landscape) {

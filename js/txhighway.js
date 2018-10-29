@@ -1,15 +1,14 @@
 "use strict";
 
 // urls
-const urlCash = "wss://ws.nanocrawler.cc/",
-	urlCore = "wss://ws.blockchain.info/inv",
-	urlCors = "https://txhighway-proxy.herokuapp.com/index.php?url=", //"https://txhighway-cors-proxy-porlybe.c9users.io/index.php?url=", //"https://cors-anywhere.herokuapp.com/", //"http://cors-proxy.htmldriven.com/?url=",
+const urlCore = "wss://ws.blockchain.info/inv",
+	urlCors = "",//"https://txhighway-proxy.herokuapp.com/index.php?url=",
 	urlBtc = "api.btc.com/v3/",
 	urlBlockchainInfo = "https://api.blockchain.info/",
 	urlCoinMarketCap = "https://api.coinmarketcap.com/v1/ticker/";
 
 // sockets
-const socketCash = new WebSocket(urlCash),
+const socketDash = io("https://insight.dash.org/"),
 	socketCore = new WebSocket(urlCore);
 
 // DOM elements
@@ -33,6 +32,7 @@ const canvas = document.getElementById("renderCanvas"),
 
 // sprites
 const carCore = new Image(),
+	/*unused
 	carMicroCash = new Image(),
 	carSmallCash = new Image(),
 	carSmallMedCash = new Image(),
@@ -41,6 +41,7 @@ const carCore = new Image(),
 	carXLargeCash = new Image(),
 	carWhaleCash = new Image(),
 	carUserCash = new Image(),
+	*/
 	carMicroCore = new Image(),
 	carSmallCore = new Image(),
 	carSmallMedCore = new Image(),
@@ -49,10 +50,11 @@ const carCore = new Image(),
 	carXLargeCore = new Image(),
 	carWhaleCore = new Image(),
 	carUserCore = new Image(),
-	carLambo = new Image(),
+	//carLambo = new Image(),
 	carSpam = new Image(),
-	carSatoshiBones = new Image(),
-	carSegwit = new Image();
+	//carSatoshiBones = new Image(),
+	carSegwit = new Image(),
+	dashPlane = new Image();
 
 // sound system
 let audioContext = null;
@@ -79,7 +81,7 @@ let WIDTH = null,
 	SPEED = 12,
 	SPEED_MODIFIER = 0.5,
 	VOLUME = 0.5,
-	PRICE_BCH = 0,
+	PRICE_DASH = 0,
 	PRICE_BTC = 0,
 	DONATION_GOAL = 2; // goal of donation in bch
 
@@ -108,33 +110,24 @@ let txCash = [],
 	feesCash = [];
 
 // connect to sockets
-socketCash.onopen = ()=>{
-	socketCash.send(JSON.stringify({ 
-    event: "subscribe", 
-    data: ["all"] 
-  }));
-}
+socketDash.on('connect', function() {
+  // Join the room.
+  socketDash.emit('subscribe', 'inv');
+})
+socketDash.on('tx', function(data) {
+	//console.log("New transaction received: " + data.txid)
+	var txData = {
+		"out": data.vout,
+		"hash": data.txid,
+		"inputs": [],
+		"valueOut": data.valueOut,
+		"isCash": true
+	};
+	newTX(true, txData);
+})
 
 socketCore.onopen = ()=> {
 	socketCore.send(JSON.stringify({"op":"unconfirmed_sub"}));
-}
-
-socketCash.onmessage = (onmsg) =>{
-	let res = JSON.parse(onmsg.data);
-	
-	var txData = {
-		"out": [res.data.account],
-		"hash": res.data.hash,
-		"inputs": [],
-		"valueOut": (res.data.amount / 1000000000000000000000000000000),
-		"isCash": true
-	}
-	
-	newTX(true, txData);
-}
-
-socketCash.onerror = (onerr) =>{
-	console.log(onerr);
 }
 
 socketCore.onmessage = (onmsg)=> {
@@ -157,6 +150,34 @@ socketCore.onmessage = (onmsg)=> {
 	}
 }
 
+// Done on demand when clicking the audio button the first time or changing the volume slider
+function initAudio(){
+	// set initial volume
+	let AudioContext = window.AudioContext || window.webkitAudioContext || false;
+	if (AudioContext) {
+		let audioContextCall = window.AudioContext || window.webkitAudioContext;
+		audioContext = new audioContextCall;
+		gainNode = audioContext.createGain();
+	} else {
+        alert("Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox");
+	}
+	gainNode.gain.setTargetAtTime(VOLUME, audioContext.currentTime, 0.015);
+
+	// assign sounds to variables
+	loadSound("assets/audio/motorcycle-lowergain.mp3", "motorcycle")
+	loadSound("assets/audio/car-pass-lowergain.mp3", "car");
+	loadSound("assets/audio/diesel-pass.mp3", "diesel");
+	loadSound("assets/audio/semi-pass.mp3", "semi");
+	loadSound("assets/audio/mercy-6s.mp3", "mercy");
+	loadSound("assets/audio/ride-dirty-7s.mp3", "ride");
+	loadSound("assets/audio/cha-ching.mp3", "cha-ching")
+	loadSound("assets/audio/la-cucaracha.mp3", "la-cucaracha");
+	loadSound("assets/audio/spam.mp3", "spam");
+	loadSound("assets/audio/allspam.mp3", "allspam");
+	loadSound("assets/audio/horns.mp3", "horns");
+	loadSound("assets/audio/evil-laugh.mp3", "laugh");
+}
+
 // initialise everything
 function init(){
 	// setup canvas
@@ -168,6 +189,7 @@ function init(){
 	window.addEventListener("resize", resize, false);
 
 	//cash vehicles
+	/*unused
 	carMicroCash.src = "assets/sprites/bch-micro.png";
 	carSmallCash.src = "assets/sprites/bch-small.png";
 	carSmallMedCash.src = "assets/sprites/bch-small-med.png";
@@ -178,6 +200,8 @@ function init(){
 	carUserCash.src = "assets/sprites/tx-taxi.png"; 
 	carLambo.src = "assets/sprites/lambo.png";
 	carSatoshiBones.src = "assets/sprites/bones.png";
+	*/
+	dashPlane.src = "assets/sprites/dashPlane.png";
 
 	//core vehicles
 	carMicroCore.src = "assets/sprites/core-micro.png";
@@ -197,33 +221,6 @@ function init(){
 		$( ".sign" ).fadeToggle( "slow", "linear" );
 	}
 
-	// assign audio context
-	let AudioContext = window.AudioContext || window.webkitAudioContext || false;
-	if (AudioContext) {
-		let audioContextCall = window.AudioContext || window.webkitAudioContext;
-		audioContext = new audioContextCall;
-		gainNode = audioContext.createGain();
-	} else {
-        alert("Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox");
-	}
-
-	// assign sounds to variables
-	loadSound("assets/audio/motorcycle-lowergain.mp3", "motorcycle")
-	loadSound("assets/audio/car-pass-lowergain.mp3", "car");
-	loadSound("assets/audio/diesel-pass.mp3", "diesel");
-	loadSound("assets/audio/semi-pass.mp3", "semi");
-	loadSound("assets/audio/mercy-6s.mp3", "mercy");
-	loadSound("assets/audio/ride-dirty-7s.mp3", "ride");
-	loadSound("assets/audio/cha-ching.mp3", "cha-ching")
-	loadSound("assets/audio/la-cucaracha.mp3", "la-cucaracha");
-	loadSound("assets/audio/spam.mp3", "spam");
-	loadSound("assets/audio/allspam.mp3", "allspam");
-	loadSound("assets/audio/horns.mp3", "horns");
-	loadSound("assets/audio/evil-laugh.mp3", "laugh");
-
-	// set initial volume
-	gainNode.gain.setTargetAtTime(VOLUME, audioContext.currentTime, 0.015);
-
 	// start animation
 	requestID = requestAnimationFrame(animate);
 
@@ -233,19 +230,12 @@ function init(){
 		updatePriceData();	
 	}, 3000);
 	getCoreConfTime(urlBlockchainInfo + "charts/avg-confirmation-time?format=json&cors=true");
-
-	// set donation goal information
-	setTimeout(() => {
-		getDevDonations();	
-	}, 3000);
 	
 	// remove loading screen
 	onReady(function () {
 		show('page', true);
 		show('loading', false);
 	});
-
-
 }
 
 function mobileCheck(){
@@ -260,47 +250,24 @@ function mobileCheck(){
 // gets latest utx count and sets it to signs
 function updateMempoolData(){
 	getPoolData(urlCors + "https://chain." + urlBtc + "tx/unconfirmed/summary", false);
-	getPoolData(urlCors + "https://bch-chain." + urlBtc + "tx/unconfirmed/summary", true);
+	getPoolData(urlCors + "https://chain.so/api/v2/get_info/DASH", true);
 }
 
 function updatePriceData(){
-	getPriceData(urlCoinMarketCap + "nano/");
+	getPriceData(urlCoinMarketCap + "dash/");
 	getPriceData(urlCoinMarketCap + "bitcoin/");
 }
-// get current balance of dev donation address
-function getDevDonations(){
-	let xhr = new XMLHttpRequest();
-	let url =  urlCors + "https://bch-chain." + urlBtc + "address/3MtCFL4aWWGS5cDFPbmiNKaPZwuD28oFvF";
 
-	xhr.onload = function(){
-		if (xhr.readyState == 4 && xhr.status == 200) {
-			let res = JSON.parse(xhr.responseText);
-			//res = JSON.parse(res.data);
-			let sumVal = res.data.balance;
-			sumVal /= 100000000;
-
-			document.getElementById("donationAmt").textContent = sumVal + " BCH";
-			document.getElementById("donationTotal").textContent = DONATION_GOAL + " BCH";
-
-			sumVal = sumVal/DONATION_GOAL * 100;
-			donationGoal.setAttribute("value", sumVal);
-		}
-	}
-
-	xhr.open('GET', url, true);
-	xhr.send(null);
-}
-
-// get price in usd for bch & btc
+// get price in usd for dash & btc
 function getPriceData(url){
 	let xhr = new XMLHttpRequest();
 
 	xhr.onload = function(){
 		if (xhr.readyState == 4 && xhr.status == 200) {		
 			let res = JSON.parse(xhr.responseText);
-			if (res[0].symbol == "NANO"){
-				PRICE_BCH = res[0].price_usd;
-				document.getElementById("price_bch").textContent = "USD $" + formatWithCommas(parseFloat(PRICE_BCH).toFixed(2));
+			if (res[0].symbol == "DASH"){
+				PRICE_DASH = res[0].price_usd;
+				document.getElementById("price_dash").textContent = "USD $" + formatWithCommas(parseFloat(PRICE_DASH).toFixed(2));
 			} else {
 				PRICE_BTC = res[0].price_usd;
 				document.getElementById("price_btc").textContent = "USD $" + formatWithCommas(parseFloat(PRICE_BTC).toFixed(2));
@@ -324,12 +291,12 @@ function blockNotify(data, isCash){
 	let amount = 0;
 
 	if(isCash){
-		ticker = "BCH";
+		ticker = "DASH";
 		t = parseInt(cashPoolInfo.textContent.replace(/\,/g,''));
 		amount = data.nTx;
 		cashPoolInfo.textContent = formatWithCommas(t - amount);
 		setTimeout(() => {
-			getPoolData(urlCors + "https://bch-chain." + urlBtc + "tx/unconfirmed/summary", true);
+			getPoolData(urlCors + "https://chain.so/api/v2/get_info/DASH", true);
 		}, 1000);
 	} else {
 		ticker = "BTC";
@@ -366,6 +333,7 @@ function blockNotify(data, isCash){
 
 // retrieve pool information for signs
 function getPoolData(url, isCash){
+	try{
 	let xhr = new XMLHttpRequest();
 
 	xhr.onreadystatechange = function () {
@@ -373,7 +341,7 @@ function getPoolData(url, isCash){
 			let obj = JSON.parse(xhr.responseText);
 			
 			if (isCash){
-				cashPoolInfo.textContent = formatWithCommas(obj.data.count);
+				cashPoolInfo.textContent = formatWithCommas(obj.data.unconfirmed_txs);
 			} else {
 				corePoolInfo.textContent = formatWithCommas(obj.data.count);
 				let mod = obj.data.count/2400/100;
@@ -393,6 +361,10 @@ function getPoolData(url, isCash){
 	xhr.open('GET', url, true);
 
 	xhr.send();
+	}
+	catch (error) {
+		console.log("getPoolData "+url+" failed: "+error);
+	}
 }
 
 // get average confirmation time for btc
@@ -444,11 +416,11 @@ vis(function(){
 		txCash = [];
 		txCore = [];
 		requestAnimationFrame(animate);
-		if(!isCoreMuted) audioHorns.connect(gainNode);
+		if(!isCoreMuted && audioHorns) audioHorns.connect(gainNode);
 		isVisible = true;
 	} else{
 		cancelAnimationFrame(requestID);
-		if(!isCoreMuted) audioHorns.disconnect()
+		if(!isCoreMuted && audioHorns) audioHorns.disconnect()
 		isVisible = false;
 	}
 });
@@ -493,7 +465,7 @@ function addTxToList(isCash, txid, valueOut, car){
 
     if (isCash){
 		listItem.className = "txinfo-cash";
-		anchor.setAttribute("href", "https://nanocrawler.cc/explorer/block/" + txid);
+		anchor.setAttribute("href", "https://mydashwallet.org:3001/insight/tx/" + txid);
     } else {
 		listItem.className = "txinfo-core";
 		anchor.setAttribute("href", "https://btc.com/" + txid);
@@ -529,14 +501,7 @@ function createVehicle(type, arr, txInfo, lane, isCash){
 	fee = (valIn - valOut *100000000)/100000000;
 	
 	if (fee < 0) fee = 0;
-
-	if (isCash){
-		donation = isDonationTx(txInfo);
-		sdTx = isSatoshiBonesTx(txInfo);
-	}
-
 	if (fee != 0) updateFees(isCash, fee);
-
 	if(txInfo.valueOut){
 		valOut = txInfo.valueOut;
 	}
@@ -570,7 +535,6 @@ function createVehicle(type, arr, txInfo, lane, isCash){
 			x = last.x - width - 10;
 		}
 	} */
-
 	let item = {
 		//type:type,
 		id: txInfo.hash,
@@ -593,7 +557,7 @@ function createVehicle(type, arr, txInfo, lane, isCash){
 
 function updateFees(isCash, fee){
 	if(isCash){
-		fee = fee * PRICE_BCH;
+		fee = fee * PRICE_DASH;
 		if (feesCash.length == 100) feesCash.splice(0,1);
 		feesCash.push(fee);
 		if (feesCash.length == 1) return;
@@ -623,12 +587,17 @@ function updateFees(isCash, fee){
 
 /* return car based upon transaction size*/
 function getCar(valueOut, donation, isCash, userTx, sdTx, sw){
+	/*unused
 	if (donation == true){
 		SPEED = 4;
 		return carLambo;
 	}
+	*/
 
-	if(sw) return carSegwit;
+	if(sw){
+		SPEED = 7;
+		return carSegwit;
+	}
 	
 	// satoshi bones tx
 	//if(sdTx) return carSatoshiBones;	
@@ -644,62 +613,65 @@ function getCar(valueOut, donation, isCash, userTx, sdTx, sw){
 
 	let val = 0;
 	if (isCash){
-		val = valueOut * PRICE_BCH;
+		val = valueOut * PRICE_DASH;
 	} else {
 		val = valueOut * PRICE_BTC;
 	}
 	
+	if (isCash){
+		return dashPlane;
+	}
 	if (val <= TX_MICRO){
-		if (isCash){
-			return carMicroCash;
-		} else {
+		//if (isCash){
+		//	return carMicroCash;
+		//} else {
 			return carMicroCore;
-		}
+		//}
 
 	} else if (val > TX_MICRO && val <= TX_SMALL){
-		if (isCash){
-			return carSmallCash;
-		} else {
+		//if (isCash){
+		//	return carSmallCash;
+		//} else {
 			return carSmallCore;
-		}
+		//}
 	} else if (val > TX_SMALL && val <= TX_SMALL_MED){	
-		if (isCash){
-			return carSmallMedCash;
-		} else {
+		//if (isCash){
+		//	return carSmallMedCash;
+		//} else {
 			return carSmallMedCore;
-		}
+		//}
 	} else if (val > TX_SMALL_MED && val <= TX_MEDIUM){
-		if (isCash){
-			return carMediumCash;
-		} else {
+		//if (isCash){
+		//	return carMediumCash;
+		//} else {
 			return carMediumCore;
-		}
+		//}
 	} else if (val > TX_MEDIUM && val <= TX_LARGE){
-		if (isCash){
-			return carLargeCash;
-		} else {
+		//if (isCash){
+		//	return carLargeCash;
+		//} else {
 			return carLargeCore;
-		}
+		//}
 	} else if (val > TX_LARGE && val <= TX_WHALE){
-		if (isCash){
-			return carXLargeCash;
-		} else {
+		//if (isCash){
+		//	return carXLargeCash;
+		//} else {
 			return carXLargeCore;
-		}
+		//}
 	} else if (val > TX_WHALE){
-		if (isCash){
-			return carWhaleCash;
-		} else {
+		//if (isCash){
+		//	return carWhaleCash;
+		//} else {
 			return carWhaleCore;
-		}
+		//}
 	}
 }
 /* end return car */
 
 // add sounds to sound array for playback
 function addSounds(carType){
-	if (!isVisible) return;
-
+	if (!isVisible || !audioContext) return;
+	
 	if (carType == carUserCash || carType == carUserCore) {
 		playSound(audioLaCucaracha);
 	}
@@ -718,26 +690,27 @@ function addSounds(carType){
 		}
 	}
 
-	if (carType == carMicroCash || carType == carMicroCore){
+	if (//carType == carMicroCash ||
+		carType == carMicroCore){
 		playSound(audioMotorcycle);
-	} else if (carType == carMicroCash ||
+	} else if (//carType == carMicroCash ||
 		carType == carMicroCore ||
-		carType == carSmallCash ||
+		//carType == carSmallCash ||
 		carType == carSmallCore ||
-		carType == carSmallMedCash ||
+		//carType == carSmallMedCash ||
 		carType == carSmallMedCore){
 			playSound(audioCar);
-	} else if (carType == carMediumCash ||
+	} else if (//carType == carMediumCash ||
 		carType == carMediumCore ||
-		carType == carLargeCash ||
+		//carType == carLargeCash ||
 		carType == carLargeCore ||
-		carType == carXLargeCash ||
+		//carType == carXLargeCash ||
 		carType == carXLargeCore){
-			audioDiesel.playbackRate = 1.4;
+			//audioDiesel.playbackRate = 1.4;
 			playSound(audioDiesel);	
-	} else if (carType == carWhaleCash ||
+	} else if (//carType == carWhaleCash ||
 		carType == carWhaleCore){
-			audioSemi.playbackRate = 1.8;
+			//audioSemi.playbackRate = 1.8;
 			playSound(audioSemi);
 	} else if (carType == carSpam){
 		playSound(audioSpam);
@@ -746,9 +719,11 @@ function addSounds(carType){
 
 // plays the sound
 function playSound(buffer) {
+	if (!audioContext || !buffer)
+		return;
 	let source = audioContext.createBufferSource();
 	source.buffer = buffer;
-	source.playbackRate.value = speedSlider.value/100 + 0.5;
+	//source.playbackRate.value = speedSlider.value/100 + 0.5;
 
 	source.connect(gainNode);
 	gainNode.connect(audioContext.destination);
@@ -797,51 +772,7 @@ function loadSound(url, sound){
 
 // check for donations into the BCF
 let isDonationTx = function(txInfo){
-	let vouts = txInfo.out;//.vout;
-	let isDonation = false;
-
-	vouts.forEach((key)=>{
-		let k = key.addr;
-		
-		if (k == "3ECKq7onkjnRQR2nNe5uUJp2yMsXRmZavC" ||
-				k == "3MtCFL4aWWGS5cDFPbmiNKaPZwuD28oFvF") {
-					isDonation = true;
-					setTimeout(getDevDonations(), 3000);
-		}
-	});
-
-	return isDonation;
-}
-
-// check for satoshi dice tx
-let isSatoshiBonesTx = function(txInfo){
-	let satoshiBonesTx = false;
-
-	console.log(txInfo)
-
-	txInfo.out.forEach((key)=>{
-		check(key.addr);
-	});
-
-	txInfo.inputs.forEach((key)=>{
-		check(key.prev_out.addr);
-	});
-
-	function check(k){
-		if(k == "1bones76bhLcQ7utrNRG7SfozXWp19tQY" ||
-			k == "1bonesBvWUqyFP8Ff5cwtm3RvDTEh4Ydn" ||
-			k == "1bonesB8Z4Gj2k7KNiCRh1QzrHTztUqTa" ||
-			k == "1bonespxj9YTz9i5qkmAHLUvBjHUGqRj8" ||
-			k == "1bonesHoANjGEE9qqLS2yWytHgCBRfc6S" ||
-			k == "1bonesKyn7k3nUQdXWFGtbFCUkE3wWnVH" ||
-			k == "1bonesTkYwW2AnGpy5GTShZ87ZMbSRKWp" ||
-			k == "1bones63rEYAms5Sz1nxVsDpAYGYNfdkd" ||
-			k == "1bonesKj4KV6nZqCYe1b21gx39jCKSXxV" ||
-			k == "1bonesB8d7sgzio1hweuk8YgFc2q6HHyo" ||
-			k == "1bonesU1GG6ErmNAECq9b62kv21V9s2An") satoshiBonesTx = true;
-	}
-
-	return satoshiBonesTx;
+	return false;
 }
 
 // check for transactions to user's addresses
@@ -898,21 +829,19 @@ function drawVehicles(arr){
 				item.y += item.d;
 				y += item.y;
 			}
-			ctx.drawImage(car, item.x, y, width, SINGLE_LANE);
-			
+			var sizeMultiplier = isCash ? 1.5 : 1.0;
+			ctx.drawImage(car, item.x, y - ((sizeMultiplier-1)*SINGLE_LANE*0.5), sizeMultiplier * width, sizeMultiplier * SINGLE_LANE);
 		} else {
 			if (!item.isCash) txWaiting += 1;
 		}
 
 		if(item.isCash){
-			item.x += SPEED;
+			item.x += SPEED * 2;
 		} else {
 			let spd = SPEED * SPEED_MODIFIER;
 			item.x += spd;
 			isCash = false;
-			
 		}
-		
 	});
 
 	// update tx offscreen sign
@@ -964,6 +893,8 @@ volumeSlider.oninput = function(){
 	let newVol = this.value/100;
 	VOLUME = newVol;
 	gainNode.gain.setTargetAtTime(VOLUME, audioContext.currentTime, 0.015);
+	if (!audioContext)
+		initAudio();
 }
 
 $('#tx-list-button').click(function(){
@@ -985,6 +916,10 @@ $('.global-mute a').click(function(){
     $(this).find('i').toggleClass('pulse pulse-off');
     $('.cash-mute').click();
     $('.core-mute').click();
+	
+	if (!audioContext)
+		initAudio();
+	
     return false;
 });
 
@@ -1045,7 +980,8 @@ function muteCore(){
 	if (isCoreMuted) {
 		isCoreMuted = false;
 	} else {
-		audioHorns.disconnect();
+		if (audioHorns)
+		  audioHorns.disconnect();
 		isCoreMuted = true;
 		isHornsPlaying = false;
 	}
@@ -1100,7 +1036,9 @@ function onReady(callback) {
 }
 
 function show(id, value) {
-    document.getElementById(id).style.display = value ? 'block' : 'none';
+	var elem = document.getElementById(id);
+	if (elem)
+		elem.style.display = value ? 'block' : 'none';
 }
 
 init();
