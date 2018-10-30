@@ -1882,8 +1882,8 @@ input[type=range]:focus::-ms-fill-upper {
 @media screen and (max-width: 600px) and (orientation: portrait) {
 
     .bitcoin-cash {
-      background-size: auto 40% !important;
-      background-position:42.5% 65%;
+      background-size: auto 20% !important;
+      background-position:40% 70%;
 
     }
     .bs {
@@ -2108,4 +2108,19 @@ input[type=range]:focus::-ms-fill-upper {
     .cash-road-sign {
       top: 60px;
     }    
+	.title2{
+		width:100%;
+	}
+.title2 h3 {
+  font-size: 14px;
+  color: #fff;
+  margin-top: -2px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: center;
+  line-height:1.45;
+  margin-bottom:0;
+  padding-bottom:0;
+  text-shadow:0 1px 3px #000;
+  letter-spacing:1px;
+}
   }
