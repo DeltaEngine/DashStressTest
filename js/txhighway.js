@@ -68,11 +68,12 @@ let audioMotorcycle = null,
 	audioMercy = null,
 	audioRide = null,
 	audioChaChing = null,
-	audioLaCucaracha = null,
+	//audioLaCucaracha = null,
 	audioSpam = null,
-	audioAllSpam = null,
+	//audioAllSpam = null,
 	audioHorns = null,
-	audioLaugh = null;
+	//audioLaugh = null;
+	audioPlane = null;
 
 // constants
 let WIDTH = null,
@@ -99,8 +100,8 @@ let requestID = null;
 // booleans
 let isVisible = true,
 	konamiActive = false,
-	isCashMuted = false,
-	isCoreMuted = false,
+	//isCashMuted = false,
+	//isCoreMuted = false,
 	isHornsPlaying = false;
 
 // arrays for vehicles
@@ -171,11 +172,12 @@ function initAudio(){
 	loadSound("assets/audio/mercy-6s.mp3", "mercy");
 	loadSound("assets/audio/ride-dirty-7s.mp3", "ride");
 	loadSound("assets/audio/cha-ching.mp3", "cha-ching")
-	loadSound("assets/audio/la-cucaracha.mp3", "la-cucaracha");
+	//loadSound("assets/audio/la-cucaracha.mp3", "la-cucaracha");
 	loadSound("assets/audio/spam.mp3", "spam");
-	loadSound("assets/audio/allspam.mp3", "allspam");
+	//loadSound("assets/audio/allspam.mp3", "allspam");
 	loadSound("assets/audio/horns.mp3", "horns");
-	loadSound("assets/audio/evil-laugh.mp3", "laugh");
+	//loadSound("assets/audio/evil-laugh.mp3", "laugh");
+	loadSound("assets/audio/plane.mp3", "plane");
 }
 
 // initialise everything
@@ -416,11 +418,13 @@ vis(function(){
 		txCash = [];
 		txCore = [];
 		requestAnimationFrame(animate);
-		if(!isCoreMuted && audioHorns) audioHorns.connect(gainNode);
+		if(//!isCoreMuted &&
+			audioHorns) audioHorns.connect(gainNode);
 		isVisible = true;
 	} else{
 		cancelAnimationFrame(requestID);
-		if(!isCoreMuted && audioHorns) audioHorns.disconnect()
+		if(//!isCoreMuted &&
+			audioHorns) audioHorns.disconnect()
 		isVisible = false;
 	}
 });
@@ -604,11 +608,11 @@ function getCar(valueOut, donation, isCash, userTx, sdTx, sw){
 
 	// user tx vehicles need to go here
 	if (userTx){
-		if (isCash){
-			return carUserCash;
-		} else {
+		//if (isCash){
+		//	return carUserCash;
+		//} else {
 			return carUserCore;
-		}
+		//}
 	}
 
 	let val = 0;
@@ -672,14 +676,21 @@ function getCar(valueOut, donation, isCash, userTx, sdTx, sw){
 function addSounds(carType){
 	if (!isVisible || !audioContext) return;
 	
-	if (carType == carUserCash || carType == carUserCore) {
+	if (carType == dashPlane){
+		playSound(audioPlane);
+	}
+	/*
+	if (//carType == carUserCash ||
+		carType == carUserCore) {
 		playSound(audioLaCucaracha);
 	}
+	*/
 
-	if (carType == carSatoshiBones){
-		playSound(audioLaugh);
-	}
+	//if (carType == carSatoshiBones){
+	//	playSound(audioLaugh);
+	//}
 
+	/*
 	if (carType == carLambo){
 		let randSong = Math.floor(Math.random() * 2) + 1;
 		
@@ -689,6 +700,7 @@ function addSounds(carType){
 			playSound(audioRide);
 		}
 	}
+	*/
 
 	if (//carType == carMicroCash ||
 		carType == carMicroCore){
@@ -751,14 +763,16 @@ function loadSound(url, sound){
 				audioRide = buffer;
 			} else if (sound == "cha-ching"){
 				audioChaChing = buffer;
-			} else if (sound == "la-cucaracha"){
-				audioLaCucaracha = buffer;
+			//} else if (sound == "la-cucaracha"){
+			//	audioLaCucaracha = buffer;
 			} else if (sound == "spam"){
 				audioSpam = buffer;
-			} else if (sound == "allspam"){
-				audioAllSpam = buffer;
-			} else if(sound == "laugh") {
-				audioLaugh = buffer;
+			//} else if (sound == "allspam"){
+			//	audioAllSpam = buffer;
+			//} else if(sound == "laugh") {
+			//	audioLaugh = buffer;
+			} else if (sound == "plane") {
+				audioPlane = buffer;
 			} else if (sound == "horns"){
 				audioHorns = audioContext.createBufferSource();
 				audioHorns.buffer = buffer;
@@ -811,7 +825,8 @@ function drawVehicles(arr){
 		if (item.x > intro){
 			if (!item.isPlaying){
 				addTxToList(item.isCash, item.id, item.valueOut, car);
-				if ((item.isCash && !isCashMuted) || (!item.isCash && !isCoreMuted)) addSounds(car);
+				//if ((item.isCash && !isCashMuted) || (!item.isCash && !isCoreMuted))
+				addSounds(car);
 			}
 			item.isPlaying = true;
 
@@ -848,7 +863,7 @@ function drawVehicles(arr){
 	transactionsWaiting.textContent = txWaiting;
 
 	// play horns if there's more than 5 vehicles off screen
-	if(audioHorns && !isCash && !isCoreMuted){
+	if(audioHorns && !isCash){// && !isCoreMuted){
 		if (txWaiting > 5 && !isHornsPlaying){
 			audioHorns.loop = true;
 			audioHorns.connect(gainNode);
@@ -951,7 +966,7 @@ $('.nav .donate').hover(function(){
     $(this).find('i').toggleClass('fa-heart fa-money')
 });
 
-
+/*unused
 $("input.cash-mute").change(function() {
 	if(this.checked) {
       if (isCashMuted) {
@@ -986,6 +1001,7 @@ function muteCore(){
 		isHornsPlaying = false;
 	}
 }
+*/
 
 $('.nav a').on('click', function(){
   $('#'+$(this).data('modal')).css('display','block');

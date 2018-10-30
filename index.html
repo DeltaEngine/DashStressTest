@@ -29,6 +29,10 @@
   <link rel="icon" href="assets/favicon.ico" />
 
   <script>
+    if (window.location.protocol == "http:") {
+      console.log("Reloading the page to a Secure Connection...")
+      window.location = document.URL.replace("http://", "https://");
+    }
     // internet explorer check
     function Check_Version() {
       var rv = -1; // Return value assumes failure.
@@ -158,20 +162,6 @@
 
             <div class="col-6">
               <!-- Rectangular switch -->
-              <div class="switch-wrap">
-                <label class="switch">
-                  <input type="checkbox" checked class="cash-mute">
-                  <span class="switcher"></span>
-                </label>
-                <h5>Mute DASH</h5>
-              </div>
-              <div class="switch-wrap">
-                <label class="switch">
-                  <input type="checkbox" checked class="core-mute">
-                  <span class="switcher"></span>
-                </label>
-                <h5>Mute BTC</h5>
-              </div>
               <div class="switch-wrap">
                 <label class="switch">
                   <input type="checkbox" checked class="overlay-switch">
