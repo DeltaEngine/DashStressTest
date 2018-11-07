@@ -169,7 +169,7 @@ span {
   top: 3px;
   left: 5px;
   width: 75%;
-  padding-top:20px;
+  padding-top:10px;
   font-size:10px;
   text-align:center;
 }
@@ -184,6 +184,9 @@ span {
   padding-bottom:0;
   text-shadow:0 1px 3px #000;
   letter-spacing:1px;
+}
+.title-links{
+	margin-top:5px;
 }
 .live {
   color:#FF0000;
@@ -1805,7 +1808,7 @@ input[type=range]:focus::-ms-fill-upper {
 
   @media only screen and (orientation: portrait){
     .bitcoin-cash, .bs {
-      background-size: auto 50% !important;
+      background-size: auto 25% !important;
     }
   }
   .title {

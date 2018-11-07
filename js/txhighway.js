@@ -738,7 +738,8 @@ function playSound(buffer) {
 	//source.playbackRate.value = speedSlider.value/100 + 0.5;
 
 	source.connect(gainNode);
-	gainNode.connect(audioContext.destination);
+	if (gainNode)
+		gainNode.connect(audioContext.destination);
 	source.start(0);
 }
 
@@ -776,7 +777,8 @@ function loadSound(url, sound){
 			} else if (sound == "horns"){
 				audioHorns = audioContext.createBufferSource();
 				audioHorns.buffer = buffer;
-				gainNode.connect(audioContext.destination);
+				if (gainNode)
+					gainNode.connect(audioContext.destination);
 				audioHorns.start(0);
 			}
 		});
@@ -907,9 +909,10 @@ speedSlider.oninput = function(){
 volumeSlider.oninput = function(){
 	let newVol = this.value/100;
 	VOLUME = newVol;
-	gainNode.gain.setTargetAtTime(VOLUME, audioContext.currentTime, 0.015);
 	if (!audioContext)
 		initAudio();
+	if (gainNode)
+		gainNode.gain.setTargetAtTime(VOLUME, audioContext.currentTime, 0.015);
 }
 
 $('#tx-list-button').click(function(){
