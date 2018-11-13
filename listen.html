@@ -1,11 +1,11 @@
 <html>
 <body>
-  <script src="https://insight.dash.org/socket.io/socket.io.js"></script>
+  <script src="https://mydashwallet.org:3001/socket.io/socket.io.js"></script>
   <script>
     eventToListenTo = 'tx'
     room = 'inv'
 
-    var socket = io("https://insight.dash.org/");
+    var socket = io("https://mydashwallet.org:3001");
     socket.on('connect', function() {
       // Join the room.
       socket.emit('subscribe', room);
@@ -13,7 +13,7 @@
     socket.on(eventToListenTo, function(data) {
       console.log("New transaction received: " + data.txid)
 	  document.getElementById("txs").innerHTML +=
-		"<a href='https://insight.dash.org/tx/"+ data.txid + "'>"+data.txid+"</a> "+
+		"<a href='https://mydashwallet.org:3001/insight/tx/"+ data.txid + "'>"+data.txid+"</a> "+
 		data.valueOut+" DASH "+ new Date().toISOString() + "<br />";
     })
   </script>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="IE=11" http-equiv="X-UA-Compatible">
   <meta content="width=device-width, initial-scale=1" name="viewport">
-  <title>Dash Stress Test in November 2018</title>
+  <title>Dash 0.13 Stress Test in December 2018</title>
   <meta content="Analyze Dash and Bitcoin transactions in our highway themed transaction visualizer." name="description">
   <!-- Search Engine -->
   <meta name="description" content="Analyze Dash and Bitcoin transactions in our highway themed transaction visualizer.">
@@ -23,7 +23,7 @@
   <link href="style.css?v=1.25" rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.slim.js"></script>
-  <script src="https://insight.dash.org/socket.io/socket.io.js"></script>
+  <script src="https://mydashwallet.org:3001/socket.io/socket.io.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="icon" href="assets/favicon.ico" />
@@ -112,17 +112,39 @@
     </div>
 	
     <div class="title2">
-      <h3>Dash Stress Test 5M TX<br />November 2018 (Countdown coming soon)</h3>
-	  <br />
-	  <a href="https://MyDashWallet.org/" target="_blank">MyDashWallet.org</a> &nbsp;
-	  <a href="https://insight.dash.org/" target="_blank">Explorer 1</a> &nbsp;
-	  <a href="https://explorer.dash.org" target="_blank">Explorer 2</a> &nbsp;
+	  <h3>Dash 0.13 Stress Test 5M TX<br />Coming December 2018<br /><span id="countdown">Countdown</span></h3>
+<script>
+var countDownDate = new Date("2018-11-11").getTime();
+var x = setInterval(function() {
+  var now = new Date().getTime();
+  var distance = countDownDate - now;
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  document.getElementById("countdown").innerHTML = "Countdown: "+ days + "d " + hours + "h "
+  + minutes + "m (UTC)";
+  if (days < -1) {
+    clearInterval(x);
+    document.getElementById("countdown").innerHTML = "0.12.3 Stress Test is over, 3m tx reached!";
+  }
+  else if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("countdown").innerHTML = "Stress Test is LIVE!";
+  }
+}, 1000);
+</script>
+	  <div class="title-links">
+	  <a href="https://chain.so/dash" target="_blank">Explorer 1</a> &nbsp;
+	  <a href="https://insight.dash.org/" target="_blank">Explorer 2</a> &nbsp;
 	  <a href="https://chainz.cryptoid.info/dash/" target="_blank">Explorer 3</a> &nbsp;
+	  <a href="https://explorer.dash.org" target="_blank">Explorer 4</a> &nbsp;
 	  <a href="https://andyfreer.github.io/dash-machine/index.html" target="_blank">Dash Machine (3D)</a> &nbsp;
 	  <a href="https://dashradar.com/graph" target="_blank">DashRadar</a> &nbsp;
 	  <a href="http://udjinm6.github.io/bitlisten/" target="_blank">DashListen</a> &nbsp;
 	  <a href="https://dash-news.de/dashtv" target="_blank">DashTV</a> &nbsp;
+	  <a href="https://MyDashWallet.org/" target="_blank">MyDashWallet.org</a> &nbsp;
 	  <a href="https://dash.org" target="_blank">Dash.org</a>
+	  </div>
     </div>
 	
     <div class="nav">	  
@@ -300,7 +322,7 @@
           <p>Dash and Bitcoin Transaction Visualizer</p>
         </div>
         <div class="modal-body">
-          <p>The Dash Stress Test is a community driven stress test of the Dash blockchain. Everyone is welcome to participate in the stress test. The event is going to happen 2 days after the 0.13 release, hopefully somewhere in November 2018. Details on our <a href="https://discord.gg/PPEaN9K">Dash Nation Discord</a>.
+          <p>The Dash Stress Test is a community driven stress test of the Dash blockchain. Everyone is welcome to participate in the stress test. The event was originally planned for the 0.12.4 release, which is now called 0.13 and much bigger in scope, especially for the changes with InstantSend and performance fixes to high transaction counts. However we only tested the current code for the current 0.12.3 Dash version (as of early November 2018), thus we want to run a test now and later once 0.13 is out run the whole thing again with improved code and knowledge. Details on our <a href="https://discord.gg/PPEaN9K">Dash Nation Discord</a>.
           </p>
 		  <p>
 		  The first stress test in July 2018 reached over 700 000 transactions in a day, which was started more as a small test and mostly driven by community members using the !createtxspike command of the MyDashWallet Discord bot. At that time it was the highest number of transactions processed by any bitcoin based blockchain ever in a day. In September 2018 Bitcoin Cash reached 2.1 million transactions and we want to bring the Dash network really to its limits this time (which is around 4-5 million transactions by filling every 2mb block every 2.6 minutes for 24h).

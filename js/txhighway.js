@@ -8,8 +8,17 @@ const urlCore = "wss://ws.blockchain.info/inv",
 	urlCoinMarketCap = "https://api.coinmarketcap.com/v1/ticker/";
 
 // sockets
-const socketDash = io("https://insight.dash.org/"),
+const socketDash = io("https://mydashwallet.org:3001");
+var socketCore;
+try {
 	socketCore = new WebSocket(urlCore);
+}
+catch {
+	setTimeout(function() {
+		document.location.reload();
+		socketCore = new WebSocket(urlCore);
+	}, 5000);
+}
 
 // DOM elements
 const canvas = document.getElementById("renderCanvas"),
@@ -110,6 +119,10 @@ let txCash = [],
 	feesCore = [],
 	feesCash = [];
 
+var lastOut = [];
+var lastHash = "9f1c63fd17254bad750801ead010cecb7474f433a5acc5fb4e5c9ba4441656f5";
+var lastValueOut = 0.81026406;
+
 // connect to sockets
 socketDash.on('connect', function() {
   // Join the room.
@@ -117,6 +130,9 @@ socketDash.on('connect', function() {
 })
 socketDash.on('tx', function(data) {
 	//console.log("New transaction received: " + data.txid)
+	lastOut = data.vout;
+	lastHash = data.txid;
+	lastValueOut = data.valueOut;
 	var txData = {
 		"out": data.vout,
 		"hash": data.txid,
@@ -526,7 +542,7 @@ function createVehicle(type, arr, txInfo, lane, isCash){
 	if (arr.length > 0){
 		arr.forEach((key) => {
 			if (width >= key.x && lane == key.lane){
-				x = key.x - width - 20;
+				x = key.x - width - 40;
 			}
 		});
 	}
@@ -671,12 +687,15 @@ function getCar(valueOut, donation, isCash, userTx, sdTx, sw){
 	}
 }
 /* end return car */
-
+var lastPlayed = new Date();
 // add sounds to sound array for playback
 function addSounds(carType){
 	if (!isVisible || !audioContext) return;
 	
 	if (carType == dashPlane){
+		if (new Date() - lastPlayed < 500)
+			return;
+		lastPlayed = new Date();
 		playSound(audioPlane);
 	}
 	/*
@@ -738,7 +757,8 @@ function playSound(buffer) {
 	//source.playbackRate.value = speedSlider.value/100 + 0.5;
 
 	source.connect(gainNode);
-	gainNode.connect(audioContext.destination);
+	if (gainNode)
+		gainNode.connect(audioContext.destination);
 	source.start(0);
 }
 
@@ -776,7 +796,8 @@ function loadSound(url, sound){
 			} else if (sound == "horns"){
 				audioHorns = audioContext.createBufferSource();
 				audioHorns.buffer = buffer;
-				gainNode.connect(audioContext.destination);
+				if (gainNode)
+					gainNode.connect(audioContext.destination);
 				audioHorns.start(0);
 			}
 		});
@@ -844,14 +865,14 @@ function drawVehicles(arr){
 				item.y += item.d;
 				y += item.y;
 			}
-			var sizeMultiplier = isCash ? 1.5 : 1.0;
+			var sizeMultiplier = isCash ? 1.3123 : 1.0;
 			ctx.drawImage(car, item.x, y - ((sizeMultiplier-1)*SINGLE_LANE*0.5), sizeMultiplier * width, sizeMultiplier * SINGLE_LANE);
 		} else {
 			if (!item.isCash) txWaiting += 1;
 		}
 
 		if(item.isCash){
-			item.x += SPEED * 2;
+			item.x += SPEED * (1.23 + item.lane*0.023);//2;
 		} else {
 			let spd = SPEED * SPEED_MODIFIER;
 			item.x += spd;
@@ -907,9 +928,10 @@ speedSlider.oninput = function(){
 volumeSlider.oninput = function(){
 	let newVol = this.value/100;
 	VOLUME = newVol;
-	gainNode.gain.setTargetAtTime(VOLUME, audioContext.currentTime, 0.015);
 	if (!audioContext)
 		initAudio();
+	if (gainNode)
+		gainNode.gain.setTargetAtTime(VOLUME, audioContext.currentTime, 0.015);
 }
 
 $('#tx-list-button').click(function(){
