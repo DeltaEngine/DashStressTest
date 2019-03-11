@@ -1,20 +1,46 @@
 <html>
 <body>
-  <script src="https://mydashwallet.org:3001/socket.io/socket.io.js"></script>
+  <script src="https://explorer.mydashwallet.org/socket.io/socket.io.js"></script>
   <script>
     eventToListenTo = 'tx'
     room = 'inv'
 
-    var socket = io("https://mydashwallet.org:3001");
+    var socket = io("https://explorer.mydashwallet.org");
     socket.on('connect', function() {
       // Join the room.
       socket.emit('subscribe', room);
     })
     socket.on(eventToListenTo, function(data) {
       console.log("New transaction received: " + data.txid)
+      console.log(data)
 	  document.getElementById("txs").innerHTML +=
-		"<a href='https://mydashwallet.org:3001/insight/tx/"+ data.txid + "'>"+data.txid+"</a> "+
-		data.valueOut+" DASH "+ new Date().toISOString() + "<br />";
+		"<a href='https://explorer.mydashwallet.org/tx/"+ data.txid + "'>"+data.txid+"</a><br />"+
+    "time="+new Date().toISOString() + "<br />" +
+    "valueOut="+data.valueOut+" DASH<br />"+
+    "version="+data.version+"<br />" +
+    "type="+data.type+"<br />" +
+    "txlock="+data.txlock+"<br />" +
+    "vin="+data.vin.length+"<br />";
+for (var input of data.vin)
+	  document.getElementById("txs").innerHTML +=
+      "  input prevTxId="+input.prevTxId+" vout="+input.outputIndex+"<br />";
+    document.getElementById("txs").innerHTML +=
+    "vout="+data.vout.length+"<br />";
+for (var output of data.vout)
+	  document.getElementById("txs").innerHTML +=
+      "  output address="+Object.keys(output)[0]+" value="+Object.values(output)[0]+"<br />";
+	  document.getElementById("txs").innerHTML +=
+    "<br />";
+    })
+    socket.on('txlock', function(data) {
+      console.log("New txlock received: " + data.txid)
+      console.log(data)
+	  document.getElementById("txs").innerHTML +=
+		"TxLock <a href='https://explorer.mydashwallet.org/tx/"+ data.txid + "'>"+data.txid+"</a><br />"+
+    "time="+new Date().toISOString() + "<br />" +
+    "valueOut="+data.valueOut+" DASH<br />"+
+    "txlock="+data.txlock+"<br />" +
+    "<br />";
     })
   </script>
   <h2>Live Dash Transactions</h2>
